@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+void onPressed(){
+  print("Botão pressionado!");
+}
+
 void main (){
 
   runApp(MaterialApp(
@@ -8,19 +12,16 @@ void main (){
       color: Colors.white,
       child: Column(
         children: const [
-          Text(
-              "Lorem ipsum",
-            style: TextStyle(
-              fontSize: 35,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.normal,
-              letterSpacing: 0,
-              wordSpacing: 0,
-              decoration: TextDecoration.lineThrough,
-              decorationColor: Colors.lightGreenAccent,
-              decorationStyle: TextDecorationStyle.solid,
-              color: Colors.black
-            ),
+          FlatButton(
+            onPressed: onPressed,
+            child: Text(
+                "Clique aqui!",
+                 style: TextStyle(
+                   fontSize: 20,
+                   color: Colors.black,
+                   decoration: TextDecoration.none
+                 ),
+            )
           )
         ],
       ),
