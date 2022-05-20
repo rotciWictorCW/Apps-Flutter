@@ -1,6 +1,6 @@
 # frases_do_dia
 
-A new Flutter project.
+My 1st Flutter project.
 
 ## Getting Started
 

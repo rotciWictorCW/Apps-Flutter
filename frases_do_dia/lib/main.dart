@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 
-void onPressed(){
-  print("Botão pressionado!");
-}
-
 void main (){
 
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: HomeStateful(),
   ));
-
 }
 
 class HomeStateful extends StatefulWidget {
@@ -23,7 +18,7 @@ class HomeStateful extends StatefulWidget {
 class _HomeStatefulState extends State<HomeStateful> {
 
   var _titulo = "Frases do dia";
-  var _texto = "Victor Campos";
+  var _texto = "iuGAUGSDIUGDIGDAUIGAUGDIAdUSihsidhodhwiohdsohdohdoshhdohsdhoidhsodygdifugudgifgiufgigfidsgfsigifg";
 
   @override
   Widget build(BuildContext context) {
@@ -31,61 +26,48 @@ class _HomeStatefulState extends State<HomeStateful> {
     return Scaffold(
       appBar: AppBar(
         title: Text( _titulo ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.green,
       ),
       body: Container(
+            margin: EdgeInsets.all(12),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-                onPressed: (){
-                  setState(() {
-                    _texto = "Curso Flutter";
-                  });
-
-
-                },
-                color: Colors.blueAccent,
-                child: Text("Clique aqui"),
-
+            Image.asset(
+                "images/logo.png",
             ),
-            Text("Nome: $_texto")
+            Text(
+              "Nome: $_texto",
+              textAlign: TextAlign.justify,
+              style:TextStyle(
+                fontSize: 20,
+                color: Colors.grey,
+                wordSpacing: 2,
+
+              ) ,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green, // background
+                onPrimary: Colors.white, // foreground
+              ),
+              onPressed: (){
+                setState(() {
+
+                });
+              },
+              child: Text(
+                  "Nova Frase",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight:FontWeight.bold,
+                  ),
+              ),
+            ),
           ],
-      ),
-      ),
-    );
-  }
-}
-
-
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-    var _titulo = "Frases do dia";
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text( _titulo ),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(20),
-        child: Text("conteúdo princioal"),
-      ),
-      bottomNavigationBar: BottomAppBar(
-          color: Colors.lightBlue,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: const <Widget>[
-                Text('Conteúdo princioal'),
-                Text('Outro Conteúdo'),
-
-              ],
-            ),
-          )
+        ),
       ),
     );
   }
