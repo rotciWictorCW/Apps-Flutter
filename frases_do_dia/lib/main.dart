@@ -7,20 +7,31 @@ void onPressed(){
 void main (){
 
   runApp(MaterialApp(
-    //debugShowCheckedModeBanner: false,
-    title: 'Frase do dia',
-    home: Container(
-      //color: Colors.white,
-      margin: EdgeInsets.only(top:40),
-      decoration: BoxDecoration(
-        border: Border.all(width: 3,color: Colors.deepPurple)
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      appBar: AppBar(
+        title: const Text("Frases do dia"),
+        backgroundColor: Colors.blueAccent,
       ),
-      child: Image.asset(
-          "images/parque.jpg",
-          fit: BoxFit.fitWidth,
+      body: const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text("conteúdo princioal"),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.lightBlue,
+        child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: <Widget>[
+                const Text('Conteúdo princioal'),
+                const Text('Outro Conteúdo'),
 
-      )
-    )
+              ],
+            ),
+        )
+
+      ),
+    ),
   ));
 
 }
