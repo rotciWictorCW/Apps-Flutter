@@ -15,15 +15,11 @@ void main (){
       decoration: BoxDecoration(
         border: Border.all(width: 3,color: Colors.deepPurple)
       ),
-      child: Column( // flex-direction
-        mainAxisAlignment: MainAxisAlignment.center, // justify-content
-        crossAxisAlignment: CrossAxisAlignment.center, // align-itens
-        children: const [
-          Text("T1"),
-          Text("T2"),
-          Text("T3")
-        ],
-      ),
+      child: Image.asset(
+          "images/parque.jpg",
+          fit: BoxFit.fitWidth,
+
+      )
     )
   ));
 
