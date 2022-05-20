@@ -34,10 +34,6 @@ class _HomeStatefulState extends State<HomeStateful> {
   ];
   var _random;
 
-  void randomize(){
-
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -73,7 +69,7 @@ class _HomeStatefulState extends State<HomeStateful> {
               ),
               onPressed: (){
                 setState(() {
-                  _random = Random().nextInt(10);
+                  _random = Random().nextInt(_phrases.length);
                   _selectedPhrase = _phrases[_random];
                 });
               },
