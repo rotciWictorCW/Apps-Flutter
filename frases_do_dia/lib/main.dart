@@ -11,26 +11,17 @@ void main (){
     title: 'Frase do dia',
     home: Container(
       //color: Colors.white,
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      margin: EdgeInsets.only(top:50),
+      margin: EdgeInsets.only(top:40),
       decoration: BoxDecoration(
-        border: Border.all(width: 5,color: Colors.deepPurple)
+        border: Border.all(width: 3,color: Colors.deepPurple)
       ),
-      child: Row(
+      child: Column( // flex-direction
+        mainAxisAlignment: MainAxisAlignment.center, // justify-content
+        crossAxisAlignment: CrossAxisAlignment.center, // align-itens
         children: const [
           Text("T1"),
-
-          Padding(
-              padding: EdgeInsets.all(50),
-              child:Text("T2"),
-          ),
-
-
+          Text("T2"),
           Text("T3")
-          /*Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed elit nec quam laoreet efficitur.",
-              textAlign: TextAlign.justify,
-          )*/
         ],
       ),
     )
