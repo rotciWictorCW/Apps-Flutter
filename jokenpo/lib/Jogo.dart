@@ -16,6 +16,7 @@ class _GameState extends State<Game> {
   var winMessage = "Você ganhou!!!";
   var lossMessage = "Você perdeu :((";
   var drawMessage = "Empate :|";
+
   void _selectedOption(String userChoice){
     var choices = ["stone","paper","scissor"];
     var random = Random().nextInt(3);
@@ -42,7 +43,7 @@ class _GameState extends State<Game> {
     }
     // retorna quem ganhou
 
-    if((appChoice == "stone" && userChoice == "paper")
+    if ((appChoice == "stone" && userChoice == "paper")
     || (appChoice == "paper" && userChoice == "scissor")
     || (appChoice == "scissor" && userChoice == "stone")
     ){
@@ -50,7 +51,7 @@ class _GameState extends State<Game> {
         this._message = winMessage
       }
       );
-    }else if((appChoice == "stone" && userChoice == "scissor")
+    }else if ((appChoice == "stone" && userChoice == "scissor")
         || (appChoice == "paper" && userChoice == "stone")
         || (appChoice == "scissor" && userChoice == "paper")
     ){
@@ -64,12 +65,7 @@ class _GameState extends State<Game> {
         }
       );
     }
-
-
-
-
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +135,7 @@ class _GameState extends State<Game> {
         ],
       ),
     )
-    );
+  );
     
   }
 }
