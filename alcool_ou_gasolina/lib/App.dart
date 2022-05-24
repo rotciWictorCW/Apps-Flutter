@@ -9,58 +9,114 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
 
-  TextEditingController _textEditingController = TextEditingController();
+  TextEditingController _controllerAlcool = TextEditingController();
+  TextEditingController _controllerGasolina = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Entrada de dados"),
+        title: Text("Álcool ou Gasolina"),
+
       ),
       body: Container(
         width: double.infinity,
-
+        margin: EdgeInsets.all(25),
+        child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                  padding: EdgeInsets.all(32),
-                  child: TextField(
-                    // text, number, emailAddress, datetime
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Digite um valor"
-                    ),
-                    //enabled: false,
-                    maxLength: 10,
-                    //maxLengthEnforcement: , não parece funcionar o max legth ja trava
-                    /*style: TextStyle(
-                      fontSize: 32,
-                      color: Colors.green,
-                    ),*/
-                    //obscureText: true,
-                    /*onChanged: (String e){
-                      print("valor digitado: " + text);
-                    },*/
-                    onSubmitted: (String text){
-                      print("valor digitado onsub: " + text);
-                    },
-                    controller: _textEditingController,
-                  ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  onPrimary: Colors.white,
+                padding: EdgeInsets.only(bottom: 25),
+                child: Image.asset(
+                  'images/logo.png',
                 ),
-                onPressed: (){
-                  print("valor digitado: " + _textEditingController.text);
-                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10),
                 child: Text(
-                  "Salvar"
+                  "Saiba qual a melhor opção para o abastecimento do seu carro",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(top:25),
+                child: TextField(
+                  // text, number, emailAddress, datetime
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: "Preço Álcool, ex 1.59"
+                  ),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[400],
+                  ),
+                  onSubmitted: (String text){
+                    print("valor digitado onsub: " + text);
+                  },
+                  controller: _controllerAlcool,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(0),
+                child: TextField(
+                  // text, number, emailAddress, datetime
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: "Preço Gasolina, ex 3.15"
+                  ),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[400],
+                  ),
+                  onSubmitted: (String text){
+                    print("valor digitado onsub: " + text);
+                  },
+                  controller: _controllerGasolina,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: SizedBox(
+                  height: 45,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      onPrimary: Colors.white,
+                    ),
+                    onPressed: (){
+                      print("valor digitado: ");
+                    },
+                    child: Text(
+                      "Calcular",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  "Resultado",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
             ],
           ),
+        ),
         ),
       );
     }
