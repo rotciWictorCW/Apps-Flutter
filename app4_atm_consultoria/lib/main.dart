@@ -1,11 +1,11 @@
-import 'package:app4_atm_consultoria/EntradaCheckbox.dart';
 import 'package:flutter/material.dart';
+import 'EntradaRadiobutton.dart';
 
 
 void main(){
   runApp(
-    MaterialApp(
-      home:EntradaCheckbox()
-    )
+      MaterialApp(
+          home:EntradaRadiobutton()
+      )
   );
 }

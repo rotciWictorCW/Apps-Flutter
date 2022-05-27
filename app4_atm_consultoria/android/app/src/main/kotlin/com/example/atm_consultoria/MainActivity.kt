@@ -1,4 +1,4 @@
-package com.example.app4_atm_consultoria
+package com.example.atm_consultoria
 
 import io.flutter.embedding.android.FlutterActivity
 

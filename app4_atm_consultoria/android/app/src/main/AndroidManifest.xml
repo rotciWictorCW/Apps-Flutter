@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.app4_atm_consultoria">
+    package="com.example.atm_consultoria">
    <application
-        android:label="app4_atm_consultoria"
+        android:label="atm_consultoria"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
