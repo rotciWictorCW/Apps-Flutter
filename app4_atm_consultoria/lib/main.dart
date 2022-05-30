@@ -1,12 +1,11 @@
-import 'package:atm_consultoria/EntradaSwitch.dart';
 import 'package:flutter/material.dart';
-import 'EntradaRadiobutton.dart';
-
+import './home_page.dart';
 
 void main(){
   runApp(
       MaterialApp(
-          home:EntradaSwitch()
+          home:home_page(),
+          debugShowCheckedModeBanner: false,
       )
   );
 }
