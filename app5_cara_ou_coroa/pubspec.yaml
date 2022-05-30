@@ -63,7 +63,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - images/logo.png
-    - images/botao_jogar.png
+    - moeda_coroa.png
+    - moeda_cara.png
+    - voltar.png
+    - jogar.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
