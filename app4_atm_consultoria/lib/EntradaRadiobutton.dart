@@ -74,7 +74,7 @@ class _EntradaRadiobuttonState extends State<EntradaRadiobutton> {
                 });
                 print("resultado: " + escolha!);
               }),*/
-          ],
+      )],
         ),
       ),
     );
