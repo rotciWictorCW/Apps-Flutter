@@ -1,7 +1,9 @@
+import 'package:app7_youtube/CustomSearchDelegate.dart';
 import 'package:app7_youtube/telas/Biblioteca.dart';
 import 'package:app7_youtube/telas/Emalta.dart';
-import 'package:app7_youtube/telas/Inicio.dart';
+import 'package:app7_youtube/telas/Inicioo.dart';
 import 'package:app7_youtube/telas/Inscricao.dart';
+import 'package:app7_youtube/telas/Video.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,15 +17,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
     int _currentIndex = 0;
+    String? _resultado = "";
 
   @override
   Widget build(BuildContext context) {
-    
+
+
     List telas = [
-      Inicio(),
+      Inicio(_resultado!),
       Emalta(),
       Inscricao(),
-      Biblioteca()
+      Biblioteca(),
+      Video()
     ];
     
     return Scaffold(
@@ -46,8 +51,14 @@ class _HomeState extends State<Home> {
                 icon: Icon(Icons.videocam)
             ),
             IconButton(
-                onPressed: (){
-                  print("acao: search");
+                onPressed: () async {
+                  String? res = await showSearch(
+                      context: context,
+                      delegate: CustomSearchDelegate()
+                  );
+                  setState((){
+                    _resultado = res;
+                  });
                 },
                 icon: Icon(Icons.search)
             ),

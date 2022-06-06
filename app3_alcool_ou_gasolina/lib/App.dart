@@ -11,7 +11,7 @@ class _AppState extends State<App> {
 
   TextEditingController _controllerAlcool = TextEditingController();
   TextEditingController _controllerGasolina = TextEditingController();
-  String _textoResultado = "";
+  String _textoResultado = "2";
 
   void _calcular(){
 
