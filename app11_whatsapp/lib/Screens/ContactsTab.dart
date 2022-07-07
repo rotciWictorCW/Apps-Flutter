@@ -25,48 +25,42 @@ class _ContactsTabState extends State<ContactsTab> {
     QuerySnapshot querySnapshot =
     await db.collection("users").getDocuments();
 
-    List<nUser> usersList = List();
+    List<nUser> usersList = [];
     for (DocumentSnapshot item in querySnapshot.documents) {
 
       var data = item.data;
-      if( dados["email"] == _loggedUserEmail ) continue;
+      if( data["email"] == _loggedUserEmail ) continue;
 
       nUser user = nUser();
       user.email = data["email"];
       user.name = data["nome"];
-      user. = data["urlImagem"];
+      user.imageUrl = data["imageUrl"];
 
-      listaUsuarios.add(usuario);
+      usersList.add(user);
     }
 
-    return listaUsuarios;
+    return usersList;
   }
 
-  _recuperarDadosUsuario() async {
+  _getUserData() async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
-    FirebaseUser usuarioLogado = await auth.currentUser();
-    _idUsuarioLogado = usuarioLogado.uid;
-    _emailUsuarioLogado = usuarioLogado.email;
+    User loggedUser =  auth.currentUser!;
+    _loggedUserId = loggedUser.uid;
+    _loggedUserEmail = loggedUser.email;
 
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
----------------------------------------------
   @override
   void initState() {
     super.initState();
-    _recuperarDadosUsuario();
+    _getUserData();
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Usuario>>(
-      future: _recuperarContatos(),
+    return FutureBuilder<List<nUser>>(
+      future: _getContacts(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -83,21 +77,21 @@ class _ContactsTabState extends State<ContactsTab> {
           case ConnectionState.active:
           case ConnectionState.done:
             return ListView.builder(
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (_, indice) {
-                  List<Usuario> listaItens = snapshot.data;
-                  Usuario usuario = listaItens[indice];
+                  List<nUser>? listaItens = snapshot.data;
+                  nUser user = listaItens![indice];
 
                   return ListTile(
                     contentPadding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                     leading: CircleAvatar(
                         maxRadius: 30,
                         backgroundColor: Colors.grey,
-                        backgroundImage: usuario.urlImagem != null
-                            ? NetworkImage(usuario.urlImagem)
+                        backgroundImage: user.imageUrl!= null
+                            ? NetworkImage(user.imageUrl)
                             : null),
                     title: Text(
-                      usuario.nome,
+                      user.name,
                       style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
