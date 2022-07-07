@@ -1,0 +1,154 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
+class Settings extends StatefulWidget {
+  const Settings({Key? key}) : super(key: key);
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+
+  TextEditingController _controllerName = TextEditingController();
+  ImagePicker _picker = ImagePicker();
+  File? _image;
+  String? _loggedUserId;
+  bool _uploadingImage = false;
+  String? _recoveredUrlImage;
+
+  Future _getImage(String imageOrigin) async {
+    XFile? selectedImage;
+    switch (imageOrigin) {
+      case "camera" :
+        selectedImage = await _picker.pickImage(source: ImageSource.camera);
+        break;
+      case "gallery" :
+        selectedImage = await _picker.pickImage(source: ImageSource.gallery);
+        break;
+    }
+
+    setState(() {
+      _image = File(selectedImage!.path!);
+      if (_image != null) {
+        _uploadingImage = true;
+        _uploadImage();
+      }
+    });
+  }
+
+  Future _uploadImage() async {
+    await Firebase.initializeApp();
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference rootFolder = storage.ref();
+    Reference file = rootFolder
+        .child('profile')
+        .child("$_loggedUserId.jpg");
+
+    UploadTask task = file.putFile(_image!);
+
+    //task.snapshotEvents.listen((StorageTaskEventType storageEvent) {});
+
+    final snapshot = await task!.whenComplete(() => {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    setState(() {
+      _recoveredUrlImage = urlDownload;
+    });
+
+
+  }
+
+
+  _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User loggedUser = auth.currentUser!;
+    _loggedUserId = loggedUser.uid;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserData();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Configurações"),
+        backgroundColor: const Color(0xff075E54),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //Loading
+              CircleAvatar(
+                radius: 100,
+                backgroundColor: Colors.grey,
+                backgroundImage:
+                    _recoveredUrlImage != null
+                      ? NetworkImage(_recoveredUrlImage!)
+                      : null
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        _getImage("camera");
+                      },
+                      child: Text("Câmera")
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        _getImage("gallery");
+                      },
+                      child: Text("Galeria")
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: TextField(
+                  controller: _controllerName,
+                  style: TextStyle(fontSize: 20),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16, bottom: 10),
+                child: RaisedButton(
+                    child: Text(
+                      "Salvar",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    color: Colors.green,
+                    padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32)),
+                    onPressed: () {}
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

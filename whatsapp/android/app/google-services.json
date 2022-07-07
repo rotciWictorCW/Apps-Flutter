@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "293149426073",
+    "project_id": "whatsapp-fc62e",
+    "storage_bucket": "whatsapp-fc62e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293149426073:android:36434cc4864307c23c1308",
+        "android_client_info": {
+          "package_name": "com.example.whatsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293149426073-4mu5ha2bnkeerkdshe3e9gc74rv5nvcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYt5pF1arsCwPFprXz2MTEbsbfXZXYGBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293149426073-4mu5ha2bnkeerkdshe3e9gc74rv5nvcv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
