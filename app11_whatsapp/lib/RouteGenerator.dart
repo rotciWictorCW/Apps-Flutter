@@ -1,13 +1,17 @@
+import 'package:app11_whatsapp/model/User.dart';
 import 'package:flutter/material.dart';
 
 import 'Register.dart';
 import 'Home.dart';
 import 'Login.dart';
 import 'Settings.dart';
+import 'Chats.dart';
 
 class RouteGenerator {
 
   static Route<dynamic>? generateRoute(RouteSettings settings){
+
+    final args = settings.arguments;
 
     switch( settings.name ){
       case "/" :
@@ -29,6 +33,10 @@ class RouteGenerator {
       case "/settings" :
         return MaterialPageRoute(
             builder: (_) => Settings()
+        );
+      case "/chats" :
+        return MaterialPageRoute(
+            builder: (_) => Chats(contact: args as nUser)
         );
       default:
         _errorRoute();

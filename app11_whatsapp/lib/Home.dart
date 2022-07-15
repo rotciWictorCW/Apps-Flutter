@@ -30,9 +30,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   }
 
+  Future _verifyLoggedUser() async {
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    User? loggedUser = auth.currentUser;
+
+    if( loggedUser == null ){
+      Navigator.pushReplacementNamed(context, "/login");
+    }
+
+  }
+
+
   @override
   void initState() {
     super.initState();
+
+    _verifyLoggedUser();
 
     _getUserData();
 

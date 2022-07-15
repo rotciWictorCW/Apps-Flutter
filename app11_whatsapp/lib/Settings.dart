@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +37,7 @@ class _SettingsState extends State<Settings> {
     }
 
     setState(() {
-      _image = File(selectedImage!.path!);
+      _image = File(selectedImage!.path);
       if (_image != null) {
         _uploadingImage = true;
         _uploadImage();
@@ -52,23 +55,85 @@ class _SettingsState extends State<Settings> {
 
     UploadTask task = file.putFile(_image!);
 
-    //task.snapshotEvents.listen((StorageTaskEventType storageEvent) {});
+    task.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
 
-    final snapshot = await task!.whenComplete(() => {});
+      if(taskSnapshot.state == TaskState.running){
+        setState(() {
+          _uploadingImage = true;
+        });
+      }else if (taskSnapshot.state == TaskState.success) {
+        _retrieveUrl(taskSnapshot);
+
+      }
+
+    });
+
+    final snapshot = await task.whenComplete(() => {});
     final urlDownload = await snapshot.ref.getDownloadURL();
 
     setState(() {
       _recoveredUrlImage = urlDownload;
     });
 
-
   }
 
+  Future _retrieveUrl(TaskSnapshot taskSnapshot) async {
+    var url = await taskSnapshot.ref.getDownloadURL();
+    _updateImageUrlFirestore( url );
+
+    setState(() {
+      _recoveredUrlImage= url;
+    });
+  }
+
+  _updateImageUrlFirestore(String url) async {
+    await Firebase.initializeApp();
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    Map<String, dynamic> dataUpdate = {
+      'imageUrl': url
+    };
+
+    db.collection('users')
+        .doc(_loggedUserId)
+        .update(dataUpdate);
+  }
+
+  _updateNameFirestore() async {
+    await Firebase.initializeApp();
+
+    String name = _controllerName.text;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    Map<String, dynamic> dataUpdate = {
+      'name': name
+    };
+
+    db.collection('users')
+        .doc(_loggedUserId)
+        .update(dataUpdate);
+  }
 
   _getUserData() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User loggedUser = auth.currentUser!;
     _loggedUserId = loggedUser.uid;
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot snapshot = await db.collection('users')
+        .doc(_loggedUserId)
+        .get();
+
+    var data = jsonEncode(snapshot.data());
+    Map<String, dynamic>? valueMap = jsonDecode(data);
+    _controllerName.text = valueMap!['name'];
+
+    if ( valueMap['imageUrl'] != null ) {
+      setState(() {
+        _recoveredUrlImage = valueMap['imageUrl'];
+      });
+    }
   }
 
   @override
@@ -142,7 +207,9 @@ class _SettingsState extends State<Settings> {
                     padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32)),
-                    onPressed: () {}
+                    onPressed: () {
+                      _updateNameFirestore();
+                    }
                 ),
               )
             ],

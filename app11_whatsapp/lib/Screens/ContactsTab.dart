@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:app11_whatsapp/model/Chat.dart';
 import 'package:app11_whatsapp/model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,23 +25,31 @@ class _ContactsTabState extends State<ContactsTab> {
     FirebaseFirestore db = FirebaseFirestore.instance;
 
     QuerySnapshot querySnapshot =
-    await db.collection("users").getDocuments();
+      await db.collection("users").get();
+
+    print("dados: " + querySnapshot.docs.toString());
 
     List<nUser> usersList = [];
-    for (DocumentSnapshot item in querySnapshot.documents) {
+    for (DocumentSnapshot item in querySnapshot.docs) {
 
-      var data = item.data;
+      var response = jsonEncode(item.data());
+      Map<String, dynamic> data = jsonDecode(response);
+
+      print("datafirebase :" + data.toString());
+
       if( data["email"] == _loggedUserEmail ) continue;
 
       nUser user = nUser();
+      user.idUser = item.id;
       user.email = data["email"];
-      user.name = data["nome"];
+      user.name = data["name"];
       user.imageUrl = data["imageUrl"];
 
       usersList.add(user);
     }
 
     return usersList;
+
   }
 
   _getUserData() async {
@@ -76,22 +86,29 @@ class _ContactsTabState extends State<ContactsTab> {
             break;
           case ConnectionState.active:
           case ConnectionState.done:
+          List<nUser>? itensList = snapshot.data;
             return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, indice) {
-                  List<nUser>? listaItens = snapshot.data;
-                  nUser user = listaItens![indice];
+                itemCount: itensList?.length ?? 0,
+                itemBuilder: (_, index) {
+                  nUser? user = itensList?[index];
 
                   return ListTile(
+                    onTap: (){
+                      Navigator.pushNamed(
+                          context,
+                          "/chats",
+                        arguments: user
+                      );
+                    },
                     contentPadding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                     leading: CircleAvatar(
                         maxRadius: 30,
                         backgroundColor: Colors.grey,
-                        backgroundImage: user.imageUrl!= null
-                            ? NetworkImage(user.imageUrl)
+                        backgroundImage: user?.imageUrl!= null
+                            ? NetworkImage(user!.imageUrl)
                             : null),
                     title: Text(
-                      user.name,
+                      user?.name ?? "",
                       style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),

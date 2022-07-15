@@ -63,6 +63,8 @@ class _LoginState extends State<Login> {
 
     }).catchError((error){
 
+      print("erro: " + error.toString());
+
       setState(() {
         _errorMessage = "Erro ao autenticar usuário, verifique e-mail e senha e tente novamente!";
       });
@@ -103,7 +105,7 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 32),
                   child: Image.asset(
-                    "images/logo.png",
+                    "assets/images/logo.png",
                     width: 200,
                     height: 150,
                   ),

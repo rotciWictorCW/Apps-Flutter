@@ -1,9 +1,11 @@
 
 class nUser {
 
+  String? _idUser;
   String? _name;
   String? _email;
   String? _password;
+  String? _imageUrl;
 
   nUser();
 
@@ -18,6 +20,11 @@ class nUser {
 
   }
 
+  String get idUser => _idUser!;
+
+  set idUser(String value) {
+    _idUser = value;
+  }
 
   String get password => _password!;
 
@@ -35,5 +42,11 @@ class nUser {
 
   set name(String value) {
     _name = value;
+  }
+
+  String get imageUrl => _imageUrl!;
+
+  set imageUrl(String value) {
+    _imageUrl = value;
   }
 }
