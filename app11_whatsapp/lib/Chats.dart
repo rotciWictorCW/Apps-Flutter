@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Chats extends StatefulWidget {
-
   final nUser contact;
 
   const Chats({Key? key, required this.contact}) : super(key: key);
@@ -16,7 +15,6 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
-
   late String _loggedUserId;
   late String _receiverUserId;
   List<String> messagesList = [
@@ -37,37 +35,33 @@ class _ChatsState extends State<Chats> {
 
   TextEditingController _controllerChat = TextEditingController();
 
-  _sendMessage(){
-
+  _sendMessage() {
     String messageText = _controllerChat.text;
-    if( messageText.isNotEmpty ){
-
+    if (messageText.isNotEmpty) {
       Message message = Message();
       message.UserId = _loggedUserId;
-      message.message  = messageText;
+      message.message = messageText;
       message.imageUrl = "";
       message.type = "text";
 
       _saveMessage(_loggedUserId, _receiverUserId, message);
-
     }
-
   }
 
   _saveMessage(String idUser, String idReceiver, Message msg) async {
-
     Firebase.initializeApp();
     FirebaseFirestore db = FirebaseFirestore.instance;
 
-    await db.collection("messages").doc( idUser ).collection( idReceiver ).add( msg.toMap() );
+    await db
+        .collection("messages")
+        .doc(idUser)
+        .collection(idReceiver)
+        .add(msg.toMap());
 
     _controllerChat.clear();
-
   }
 
-  _sendPhoto(){
-
-  }
+  _sendPhoto() {}
 
   _getUserData() async {
     Firebase.initializeApp();
@@ -75,6 +69,17 @@ class _ChatsState extends State<Chats> {
     User loggedUser = auth.currentUser!;
     _loggedUserId = loggedUser.uid;
     _receiverUserId = widget.contact.idUser;
+  }
+
+  _stream() async {
+    Firebase.initializeApp();
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db
+        .collection("messages")
+        .doc(_loggedUserId)
+        .collection(_receiverUserId)
+        .snapshots();
   }
 
   @override
@@ -85,7 +90,6 @@ class _ChatsState extends State<Chats> {
 
   @override
   Widget build(BuildContext context) {
-
     var chatBox = Container(
       padding: EdgeInsets.all(8),
       child: Row(
@@ -104,106 +108,132 @@ class _ChatsState extends State<Chats> {
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(32),
+                      borderRadius: BorderRadius.circular(32),
                     ),
                     prefixIcon: IconButton(
                         icon: Icon(
-                            Icons.camera_alt,
-                            color: Color(0xff075E54),
+                          Icons.camera_alt,
+                          color: Color(0xff075E54),
                         ),
-                        onPressed: _sendPhoto
-                    )
-                ),
+                        onPressed: _sendPhoto)),
               ),
             ),
           ),
           FloatingActionButton(
             backgroundColor: Color(0xff075E54),
-            child: Icon(Icons.send, color: Colors.white,),
+            child: Icon(
+              Icons.send,
+              color: Colors.white,
+            ),
             mini: true,
             onPressed: _sendMessage,
           )
         ],
       ),
     );
-
-    var listView = Expanded(
-      child: ListView.builder(
-          itemCount: messagesList.length,
-          itemBuilder: (context, index){
-
-            double containerWidth = MediaQuery.of(context).size.width * 0.8;
-
-            Alignment alignment = Alignment.centerRight;
-            Color color = Color(0xffd2ffa5);
-            if( index % 2 == 0 ){
-              alignment = Alignment.centerLeft;
-              color = Colors.white;
-            }
-
-            return Align(
-              alignment: alignment,
-              child: Padding(
-                padding: EdgeInsets.all(6),
-                child: Container(
-                  width: containerWidth,
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.all(Radius.circular(8))
-                  ),
-                  child: Text(
-                    messagesList[index],
-                    style: TextStyle(fontSize: 18),
-                  ),
+    var stream = StreamBuilder(
+        stream: _stream(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  children: <Widget>[
+                    Text("Carregando mensagens"),
+                    CircularProgressIndicator()
+                  ],
                 ),
-              ),
-            );
-          }
-      ),
-    );
+              );
+              break;
+            case ConnectionState.active:
+            case ConnectionState.done:
+              QuerySnapshot? querySnapshot =
+                  snapshot.data as QuerySnapshot<Object?>?;
 
+              if (snapshot.hasError) {
+                return Expanded(
+                  child: Text("Eroo ao carregar"),
+                );
+              } else {
+                return Expanded(
+                  child: ListView.builder(
+                      itemCount: querySnapshot?.docs.length ?? 0,
+                      itemBuilder: (context, index) {
+                        List<DocumentSnapshot>? messages = querySnapshot?.docs.toList();
+                        DocumentSnapshot item = messages![index];
+
+                        double containerWidth =
+                            MediaQuery.of(context).size.width * 0.8;
+
+                        Alignment alignment = Alignment.centerRight;
+                        Color color = Color(0xffd2ffa5);
+                        if ( _loggedUserId != item["idUsuario"] ) {
+                          alignment = Alignment.centerLeft;
+                          color = Colors.white;
+                        }
+
+                        return Align(
+                          alignment: alignment,
+                          child: Padding(
+                            padding: EdgeInsets.all(6),
+                            child: Container(
+                              width: containerWidth,
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  color: color,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Text(
+                                messagesList[index],
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                );
+              }
+
+              break;
+          }
+        });
 
     return Scaffold(
       appBar: AppBar(
-          title: Row(
-            children: <Widget>[
-              CircleAvatar(
-                  maxRadius: 20,
-                  backgroundColor: Colors.grey,
-                  backgroundImage: widget.contact.imageUrl != null
-                      ? NetworkImage(widget.contact.imageUrl)
-                      : null),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Text(widget.contact.name),
-              )
-            ],
-          ),
-          backgroundColor: const Color(0xff075E54),
+        title: Row(
+          children: <Widget>[
+            CircleAvatar(
+                maxRadius: 20,
+                backgroundColor: Colors.grey,
+                backgroundImage: widget.contact.imageUrl != null
+                    ? NetworkImage(widget.contact.imageUrl)
+                    : null),
+            Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Text(widget.contact.name),
+            )
+          ],
+        ),
+        backgroundColor: const Color(0xff075E54),
       ),
-
       body: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/images/bg.png"),
-                fit: BoxFit.cover
-            )
-        ),
+                image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover)),
         child: SafeArea(
             child: Container(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: <Widget>[
-                  listView,
-                  chatBox,
-                  //listview
-                  //caixa mensagem
-                ],
-              ),
-            )
-        ),
+          padding: EdgeInsets.all(8),
+          child: Column(
+            children: <Widget>[
+              stream,
+              chatBox,
+              //listview
+              //caixa mensagem
+            ],
+          ),
+        )),
       ),
     );
   }
