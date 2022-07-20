@@ -77,7 +77,7 @@ class _ContactsTabState extends State<ContactsTab> {
           case ConnectionState.waiting:
             return Center(
               child: Column(
-                children: <Widget>[
+                children: const <Widget>[
                   Text("Carregando contatos"),
                   CircularProgressIndicator()
                 ],
@@ -100,7 +100,7 @@ class _ContactsTabState extends State<ContactsTab> {
                         arguments: user
                       );
                     },
-                    contentPadding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                     leading: CircleAvatar(
                         maxRadius: 30,
                         backgroundColor: Colors.grey,
@@ -110,7 +110,7 @@ class _ContactsTabState extends State<ContactsTab> {
                     title: Text(
                       user?.name ?? "",
                       style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   );
                 });

@@ -36,7 +36,7 @@ class _ChatsTabState extends State<ChatsTab> {
     });
   }
 
-  _getUserData() async {
+  Future<void> _getUserData() async {
     Firebase.initializeApp();
     FirebaseAuth auth = FirebaseAuth.instance;
     User loggedUser = auth.currentUser!;

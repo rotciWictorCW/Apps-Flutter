@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:app11_whatsapp/model/User.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'model/Chat.dart';
 import 'model/Message.dart';
@@ -21,15 +19,15 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
-  late File? _image;
+
   bool _uploadingImage = false;
   late String _loggedUserId;
   late String _receiverUserId;
-  late String? _recoveredUrlImage;
 
-  TextEditingController _controllerChat = TextEditingController();
+
+  final TextEditingController _controllerChat = TextEditingController();
   final _controller = StreamController<QuerySnapshot>.broadcast();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   void _sendMessage() {
     String messageText = _controllerChat.text;
@@ -50,14 +48,14 @@ class _ChatsState extends State<Chats> {
     }
   }
 
-  _saveChat(Message msg) {
+  void _saveChat(Message msg) {
     // save chat for user
     Chat cUser = Chat();
     cUser.receiverId = _loggedUserId;
     cUser.userId = _receiverUserId;
     cUser.message = msg.message;
-    cUser.name = widget.contact!.name;
-    cUser.photoPath = widget.contact?.imageUrl ?? '';
+    cUser.name = widget.contact.name;
+    cUser.photoPath = widget.contact.imageUrl;
     cUser.messageType = msg.type;
     cUser.save();
 
@@ -66,8 +64,8 @@ class _ChatsState extends State<Chats> {
     cReceiver.receiverId = _receiverUserId;
     cReceiver.userId = _loggedUserId;
     cReceiver.message = msg.message;
-    cReceiver.name = widget.contact!.name;
-    cReceiver.photoPath = widget.contact?.imageUrl ?? '';
+    cReceiver.name = widget.contact.name;
+    cReceiver.photoPath = widget.contact.imageUrl;
     cReceiver.messageType = msg.type;
     cReceiver.save();
   }
@@ -86,9 +84,9 @@ class _ChatsState extends State<Chats> {
   }
 
   Future<void> _sendPhoto() async {
-    ImagePicker _picker = ImagePicker();
+    ImagePicker picker = ImagePicker();
     XFile? selectedImage;
-    selectedImage = await _picker.pickImage(source: ImageSource.gallery);
+    selectedImage = await picker.pickImage(source: ImageSource.gallery);
 
     File image = File(selectedImage!.path);
 
@@ -140,17 +138,17 @@ class _ChatsState extends State<Chats> {
     _addMessagesListener();
   }
 
-  Stream _stream() {
-    FirebaseFirestore db = FirebaseFirestore.instance;
+  //Stream _stream() {
+  //  FirebaseFirestore db = FirebaseFirestore.instance;
 
-    return db
-        .collection("messages")
-        .doc(_loggedUserId)
-        .collection(_receiverUserId)
-        .snapshots();
-  }
+  //  return db
+ //       .collection("messages")
+  //      .doc(_loggedUserId)
+  //      .collection(_receiverUserId)
+   //     .snapshots();
+ // }
 
-  Stream<QuerySnapshot>? _addMessagesListener() {
+  bool _addMessagesListener() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     final stream = db
         .collection("messages")
@@ -161,10 +159,11 @@ class _ChatsState extends State<Chats> {
 
     stream.listen((data) {
       _controller.add(data);
-      Timer(Duration(seconds: 1),(){
+      Timer(const Duration(seconds: 1),(){
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
     });
+    return true;
   }
 
   @override
@@ -176,19 +175,19 @@ class _ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
     var chatBox = Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: TextField(
                 controller: _controllerChat,
                 autofocus: true,
                 keyboardType: TextInputType.text,
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 8, 32, 8),
+                    contentPadding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
                     hintText: "Digite uma mensagem...",
                     filled: true,
                     fillColor: Colors.white,
@@ -198,7 +197,7 @@ class _ChatsState extends State<Chats> {
                     prefixIcon: _uploadingImage
                         ? const CircularProgressIndicator()
                         : IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.camera_alt,
                               color: Color(0xff075E54),
                             ),
@@ -207,8 +206,8 @@ class _ChatsState extends State<Chats> {
             ),
           ),
           FloatingActionButton(
-            backgroundColor: Color(0xff075E54),
-            child: Icon(
+            backgroundColor: const Color(0xff075E54),
+            child: const Icon(
               Icons.send,
               color: Colors.white,
             ),
@@ -230,7 +229,7 @@ class _ChatsState extends State<Chats> {
                     ? NetworkImage(widget.contact.imageUrl)
                     : null),
             Padding(
-              padding: EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.only(left: 8),
               child: Text(widget.contact.name),
             )
           ],
@@ -239,12 +238,12 @@ class _ChatsState extends State<Chats> {
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover)),
         child: SafeArea(
             child: Container(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: <Widget>[
               StreamBuilder(
@@ -256,19 +255,18 @@ class _ChatsState extends State<Chats> {
                         return Center(
                           child: Column(
                             children: <Widget>[
-                              Text("Carregando mensagens"),
-                              CircularProgressIndicator()
+                              const Text("Carregando mensagens"),
+                              const CircularProgressIndicator()
                             ],
                           ),
                         );
-                        break;
                       case ConnectionState.active:
                       case ConnectionState.done:
                         QuerySnapshot? querySnapshot =
                             snapshot.data as QuerySnapshot<Object?>?;
 
                         if (snapshot.hasError) {
-                          return Expanded(
+                          return const Expanded(
                             child: Text("Erro ao carregar"),
                           );
                         } else {
@@ -286,7 +284,7 @@ class _ChatsState extends State<Chats> {
                                       MediaQuery.of(context).size.width * 0.8;
 
                                   Alignment alignment = Alignment.centerRight;
-                                  Color color = Color(0xffd2ffa5);
+                                  Color color = const Color(0xffd2ffa5);
                                   if (item != null &&
                                       _loggedUserId != item["userId"]) {
                                     alignment = Alignment.centerLeft;
@@ -296,13 +294,13 @@ class _ChatsState extends State<Chats> {
                                   return Align(
                                     alignment: alignment,
                                     child: Padding(
-                                      padding: EdgeInsets.all(6),
+                                      padding: const EdgeInsets.all(6),
                                       child: Container(
                                         width: containerWidth,
-                                        padding: EdgeInsets.all(16),
+                                        padding: const EdgeInsets.all(16),
                                         decoration: BoxDecoration(
                                             color: color,
-                                            borderRadius: BorderRadius.all(
+                                            borderRadius: const BorderRadius.all(
                                                 Radius.circular(8))),
                                         child: item['type'] == 'text'
                                             ? Text(
@@ -318,7 +316,7 @@ class _ChatsState extends State<Chats> {
                           );
                         }
 
-                        break;
+
                     }
                   }),
               chatBox,

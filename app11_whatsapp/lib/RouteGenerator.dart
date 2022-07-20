@@ -16,23 +16,23 @@ class RouteGenerator {
     switch( settings.name ){
       case "/" :
         return MaterialPageRoute(
-          builder: (_) => Login()
+          builder: (_) => const Login()
         );
       case "/login" :
         return MaterialPageRoute(
-            builder: (_) => Login()
+            builder: (_) => const Login()
         );
       case "/register" :
         return MaterialPageRoute(
-            builder: (_) => Register()
+            builder: (_) => const Register()
         );
       case "/home" :
         return MaterialPageRoute(
-            builder: (_) => Home()
+            builder: (_) => const Home()
         );
       case "/settings" :
         return MaterialPageRoute(
-            builder: (_) => Settings()
+            builder: (_) => const Settings()
         );
       case "/chats" :
         return MaterialPageRoute(
@@ -48,8 +48,8 @@ class RouteGenerator {
     return MaterialPageRoute(
       builder: (_){
         return Scaffold(
-          appBar: AppBar(title: Text("Tela não encontrada!"),),
-          body: Center(
+          appBar: AppBar(title: const Text("Tela não encontrada!"),),
+          body: const Center(
             child: Text("Tela não encontrada!"),
           ),
         );

@@ -2,10 +2,11 @@ import 'package:app11_whatsapp/Screens/ChatsTab.dart';
 import 'package:app11_whatsapp/Screens/ContactsTab.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'Login.dart';
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -17,7 +18,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     "Configurações", "Deslogar"
   ];
 
-  String _userEmail= "";
+  late String _userEmail;
 
   Future _getUserData() async {
 
@@ -58,7 +59,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   }
 
-  _selectedMenuItem(String selectedItem){
+  void _selectedMenuItem(String selectedItem){
 
     switch( selectedItem ){
       case "Configurações":
@@ -72,7 +73,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     //print("Item escolhido: " + selectedItem );
   }
 
-  _logout() async {
+  void _logout() async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth.signOut();
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => Login()
+            builder: (context) => const Login()
         )
     );
 
@@ -91,18 +92,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff075E54),
-        title: Text("ZAP"),
+        title: const Text("ZAP"),
         bottom: TabBar(
           indicatorWeight: 4,
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold
           ),
           controller: _tabController,
           indicatorColor: Colors.white,
           tabs: <Widget>[
-            Tab(text: "Conversas",),
-            Tab(text: "Contatos",)
+            const Tab(text: "Conversas",),
+            const Tab(text: "Contatos",)
           ],
         ),
         actions: [
@@ -122,8 +123,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          ChatsTab(),
-          ContactsTab()
+          const ChatsTab(),
+          const ContactsTab()
         ],
       ),
     );

@@ -18,8 +18,8 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
 
-  TextEditingController _controllerName = TextEditingController();
-  ImagePicker _picker = ImagePicker();
+  final TextEditingController _controllerName = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
   File? _image;
   String? _loggedUserId;
   bool _uploadingImage = false;
@@ -146,11 +146,11 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Configurações"),
+        title: const Text("Configurações"),
         backgroundColor: const Color(0xff075E54),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -170,23 +170,23 @@ class _SettingsState extends State<Settings> {
                       onPressed: () {
                         _getImage("camera");
                       },
-                      child: Text("Câmera")
+                      child: const Text("Câmera")
                   ),
                   TextButton(
                       onPressed: () {
                         _getImage("gallery");
                       },
-                      child: Text("Galeria")
+                      child: const Text("Galeria")
                   ),
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: TextField(
                   controller: _controllerName,
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -196,14 +196,14 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 16, bottom: 10),
+                padding: const EdgeInsets.only(top: 16, bottom: 10),
                 child: RaisedButton(
-                    child: Text(
+                    child: const Text(
                       "Salvar",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     color: Colors.green,
-                    padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32)),
                     onPressed: () {

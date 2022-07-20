@@ -14,9 +14,9 @@ class _RegisterState extends State<Register> {
 
   //Controllers
 
-  TextEditingController _controllerName = TextEditingController();
-  TextEditingController _controllerEmail = TextEditingController();
-  TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
   String _errorMessage = "";
 
   _validateFields(){
@@ -100,19 +100,19 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastro"),
+        title: const Text("Cadastro"),
         backgroundColor: const Color(0xff075E54),
       ),
       body: Container(
-        decoration: BoxDecoration(color: Color(0xff075E54)),
-        padding: EdgeInsets.all(16),
+        decoration: const BoxDecoration(color: Color(0xff075E54)),
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(bottom: 32),
+                  padding: const EdgeInsets.only(bottom: 32),
                   child: Image.asset(
                     "assets/images/usuario.png",
                     width: 200,
@@ -120,14 +120,14 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: TextField(
                     controller: _controllerName,
                     autofocus: true,
                     keyboardType: TextInputType.text,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                         hintText: "Nome",
                         filled: true,
                         fillColor: Colors.white,
@@ -136,13 +136,13 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: TextField(
                     controller: _controllerEmail,
                     keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                         hintText: "E-mail",
                         filled: true,
                         fillColor: Colors.white,
@@ -154,9 +154,9 @@ class _RegisterState extends State<Register> {
                   controller: _controllerPassword,
                   obscureText: true,
                   keyboardType: TextInputType.text,
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: "Senha",
                       filled: true,
                       fillColor: Colors.white,
@@ -164,14 +164,14 @@ class _RegisterState extends State<Register> {
                           borderRadius: BorderRadius.circular(32))),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 16, bottom: 10),
+                  padding: const EdgeInsets.only(top: 16, bottom: 10),
                   child: RaisedButton(
-                      child: Text(
+                      child: const Text(
                         "Cadastrar",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       color: Colors.green,
-                      padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32)),
                       onPressed: () {
@@ -181,7 +181,7 @@ class _RegisterState extends State<Register> {
                 Center(
                   child: Text(
                     _errorMessage,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.red,
                         fontSize: 20
                     ),
