@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:app11_whatsapp/model/User.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +28,8 @@ class _ChatsState extends State<Chats> {
   late String? _recoveredUrlImage;
 
   TextEditingController _controllerChat = TextEditingController();
+  final _controller = StreamController<QuerySnapshot>.broadcast();
+  ScrollController _scrollController = ScrollController();
 
   void _sendMessage() {
     String messageText = _controllerChat.text;
@@ -35,6 +38,7 @@ class _ChatsState extends State<Chats> {
       message.UserId = _loggedUserId;
       message.message = messageText;
       message.imageUrl = "";
+      message.date = Timestamp.now().toString();
       message.type = "text";
 
       //save for user
@@ -120,7 +124,7 @@ class _ChatsState extends State<Chats> {
     message.UserId = _loggedUserId;
     message.message = '';
     message.imageUrl = url;
-    //message.date = Timestamp.now().toString();
+    message.date = Timestamp.now().toString();
     message.type = 'image';
 
     _saveMessage(_loggedUserId, _receiverUserId, message);
@@ -132,6 +136,8 @@ class _ChatsState extends State<Chats> {
     User loggedUser = auth.currentUser!;
     _loggedUserId = loggedUser.uid;
     _receiverUserId = widget.contact.idUser;
+
+    _addMessagesListener();
   }
 
   Stream _stream() {
@@ -142,6 +148,23 @@ class _ChatsState extends State<Chats> {
         .doc(_loggedUserId)
         .collection(_receiverUserId)
         .snapshots();
+  }
+
+  Stream<QuerySnapshot>? _addMessagesListener() {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final stream = db
+        .collection("messages")
+        .doc(_loggedUserId)
+        .collection(_receiverUserId)
+        .orderBy("date", descending: false)
+        .snapshots();
+
+    stream.listen((data) {
+      _controller.add(data);
+      Timer(Duration(seconds: 1),(){
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    });
   }
 
   @override
@@ -225,7 +248,7 @@ class _ChatsState extends State<Chats> {
           child: Column(
             children: <Widget>[
               StreamBuilder(
-                  stream: _stream(),
+                  stream: _controller.stream,
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -251,7 +274,8 @@ class _ChatsState extends State<Chats> {
                         } else {
                           return Expanded(
                             child: ListView.builder(
-                                reverse: true,
+                                controller: _scrollController,
+                                reverse: false,
                                 itemCount: querySnapshot?.docs.length ?? 0,
                                 itemBuilder: (context, index) {
                                   List<DocumentSnapshot>? messages =
