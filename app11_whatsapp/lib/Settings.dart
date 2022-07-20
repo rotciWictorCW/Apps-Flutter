@@ -46,7 +46,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Future _uploadImage() async {
-    await Firebase.initializeApp();
+
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference rootFolder = storage.ref();
     Reference file = rootFolder
@@ -87,7 +87,6 @@ class _SettingsState extends State<Settings> {
   }
 
   _updateImageUrlFirestore(String url) async {
-    await Firebase.initializeApp();
 
     FirebaseFirestore db = FirebaseFirestore.instance;
 
