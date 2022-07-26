@@ -14,24 +14,26 @@ class _HomeState extends State<Home> {
   final _controller = StreamController<QuerySnapshot>.broadcast();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  _openMap(String id_trip) {
+  _openMap(String idTrip) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (_) => MapScreen(
-                  tripID: id_trip,
+                  tripID: idTrip,
                 )));
   }
 
-  _deleteTrip(String id_trip) {
-    _db.collection("trips").doc(id_trip).delete();
+  _deleteTrip(String idTrip) {
+    _db.collection("trips").doc(idTrip).delete();
   }
 
   _addLocal() {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => MapScreen()
+            builder: (_) => MapScreen(
+              tripID: null,
+            )
         ));
   }
 
@@ -82,11 +84,10 @@ class _HomeState extends State<Home> {
                           itemBuilder: (context, index) {
                             DocumentSnapshot item = trips[index];
                             String title = item["title"];
-                            //DocumentSnapshot<Object?> tripId = item;
 
                             return GestureDetector(
                               onTap: () {
-                                _openMap(title);
+                                _openMap(item.id);
                               },
                               child: Card(
                                 child: ListTile(
@@ -96,7 +97,7 @@ class _HomeState extends State<Home> {
                                     children: <Widget>[
                                       GestureDetector(
                                         onTap: () {
-                                          _deleteTrip(title);
+                                          _deleteTrip(item.id);
                                         },
                                         child: const Padding(
                                           padding: EdgeInsets.all(8),

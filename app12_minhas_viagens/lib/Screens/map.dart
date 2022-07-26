@@ -8,8 +8,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class MapScreen extends StatefulWidget {
-  String tripID = "";
-  MapScreen({Key? key, tripID}) : super(key: key);
+  late String? tripID ;
+  MapScreen({Key? key, this.tripID}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -48,7 +48,7 @@ class _MapScreenState extends State<MapScreen> {
         _markers.add( marker );
 
         //Salva no firebase
-        Map<String, dynamic> trip = Map();
+        Map<String, dynamic> trip = {};
         trip["title"] = street;
         trip["latitude"] = latLng.latitude;
         trip["longitude"] = latLng.longitude;
@@ -100,8 +100,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  _recoverTripById(String tripId) async {
-
+  _recoverTripById(String? tripId) async {
     if( tripId != null ){
 
       //exibir marcador para id viagem
@@ -143,7 +142,6 @@ class _MapScreenState extends State<MapScreen> {
     }
 
   }
-
 
   @override
   void initState() {
