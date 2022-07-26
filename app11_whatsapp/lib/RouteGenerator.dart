@@ -1,6 +1,5 @@
 import 'package:app11_whatsapp/model/User.dart';
 import 'package:flutter/material.dart';
-
 import 'Register.dart';
 import 'Home.dart';
 import 'Login.dart';

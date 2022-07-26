@@ -73,11 +73,11 @@ class _HomeState extends State<Home> {
         onDismissed: (direction){
           _lastTaskRemoved = _taskList[index];
           _taskList.removeAt(index);
-          //_saveList();
+          _saveList();
 
           final snackbar = SnackBar(
               backgroundColor: Colors.purple,
-              duration: Duration(seconds: 5),
+              duration: Duration(seconds: 2),
               content: Text(""
                   "Tarefa Removida",
               ),
