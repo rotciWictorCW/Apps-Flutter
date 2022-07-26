@@ -1,7 +1,7 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:app12_minhas_viagens/Screens/map.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,104 +11,114 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _controller = StreamController<QuerySnapshot>.broadcast();
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Completer<GoogleMapController> _controller = Completer();
-  Set<Marker> _marcadores = {};
-
-  _onMapCreated( GoogleMapController googleMapController ){
-    _controller.complete( googleMapController );
+  _openMap(String id_trip) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => MapScreen(
+                  tripID: id_trip,
+                )));
   }
 
-  _movimentarCamera() async {
-
-    GoogleMapController googleMapController = await _controller.future;
-    googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: LatLng(-23.562436, -46.655005),
-                zoom: 16,
-                tilt: 0,
-                bearing: 270
-            )
-        )
-    );
-
+  _deleteTrip(String id_trip) {
+    _db.collection("trips").doc(id_trip).delete();
   }
 
-  _carregarMarcadores(){
+  _addLocal() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => MapScreen()
+        ));
+  }
 
-    Set<Marker> marcadoresLocal = {};
+  _addTripListener() async {
+    final stream = _db.collection("trips").snapshots();
 
-    Marker marcadorShopping = Marker(
-        markerId: MarkerId("marcador-shopping"),
-        position: LatLng(-23.563370, -46.652923),
-        infoWindow: InfoWindow(
-            title: "Shopping Cidade São Paulo"
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueMagenta
-        ),
-        onTap: (){
-          print("Shopping clicado!!");
-        }
-      //rotation: 45
-    );
-
-    Marker marcadorCartorio = Marker(
-        markerId: MarkerId("marcador-cartorio"),
-        position: LatLng(-23.562868, -46.655874),
-        infoWindow: InfoWindow(
-            title: "12 Cartório de notas"
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueBlue
-        ),
-        onTap: (){
-          print("Cartório clicado!!");
-        }
-    );
-
-    marcadoresLocal.add( marcadorShopping );
-    marcadoresLocal.add( marcadorCartorio );
-
-    setState(() {
-      _marcadores = marcadoresLocal;
+    stream.listen((data) {
+      _controller.add(data);
     });
-
-
   }
 
   @override
   void initState() {
     super.initState();
-    _carregarMarcadores();
+
+    _addTripListener();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Mapas e geolocalização"),),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      appBar: AppBar(
+        title: const Text("Minhas viagens"),
+      ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.done),
-          onPressed: _movimentarCamera
-      ),
-      body: Container(
-        child: GoogleMap(
-          mapType: MapType.normal,
-          //mapType: MapType.hybrid,
-          //mapType: MapType.none,
-          //mapType: MapType.satellite,
-          //mapType: MapType.terrain,
-          //-23.562436, -46.655005
-          initialCameraPosition: CameraPosition(
-              target: LatLng(-23.563370, -46.652923),
-              zoom: 16
-          ),
-          onMapCreated: _onMapCreated,
-          markers: _marcadores,
-        ),
-      ),
+          backgroundColor: const Color(0xff0066cc),
+          onPressed: () {
+            _addLocal();
+          },
+          child: const Icon(Icons.add)),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: _controller.stream,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+              case ConnectionState.active:
+              case ConnectionState.done:
+                QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
+                List<DocumentSnapshot> trips =
+                    querySnapshot.docs.toList();
+
+                return Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: trips.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot item = trips[index];
+                            String title = item["title"];
+                            //DocumentSnapshot<Object?> tripId = item;
+
+                            return GestureDetector(
+                              onTap: () {
+                                _openMap(title);
+                              },
+                              child: Card(
+                                child: ListTile(
+                                  title: Text(title),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        onTap: () {
+                                          _deleteTrip(title);
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Icon(
+                                            Icons.remove_circle,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    )
+                  ],
+                );
+
+                break;
+            }
+          }),
     );
   }
 }

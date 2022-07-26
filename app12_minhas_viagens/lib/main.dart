@@ -1,9 +1,13 @@
+import 'package:app12_minhas_viagens/Screens/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Screens/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MaterialApp(
-    home: Home(),
-    title: "Mapas",
+    home: SplashScreen(),
+    title: "Minhas viagens",
+    debugShowCheckedModeBanner: false,
   ));
 }
